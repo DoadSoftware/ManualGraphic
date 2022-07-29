@@ -54,6 +54,12 @@ public class Container implements Comparable<Container> {
 	}
 	
 	@Override
+	public String toString() {
+		return "Container [container_id=" + container_id + ", container_key=" + container_key + ", container_value="
+				+ container_value + "]";
+	}
+
+	@Override
 	public int compareTo(Container con) {
 		return (int) (this.getContainer_id()-con.getContainer_id());
 	}

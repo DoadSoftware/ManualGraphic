@@ -15,10 +15,6 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.manual.model.Match;
-import com.manual.model.Player;
-import com.manual.model.Team;
-
 @Configuration
 @EnableTransactionManagement
 public class DataSourceConfig {
@@ -43,9 +39,7 @@ public class DataSourceConfig {
  {
  LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(dataSource());
  builder.scanPackages("com.manual.model").addProperties(getHibernateProperties());
- builder.addAnnotatedClasses(Player.class);
- builder.addAnnotatedClasses(Team.class);
- builder.addAnnotatedClasses(Match.class);
+// builder.addAnnotatedClasses(Player.class);
  
  return builder.buildSessionFactory();
  }

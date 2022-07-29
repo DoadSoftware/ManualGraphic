@@ -172,7 +172,7 @@ function processManualProcedures(whatToProcess)
         success : function(data) {
 			
 			switch(whatToProcess) {
-			case'LOAD_DATA':
+			case 'LOAD_DATA':
 				addItemsToList('LOAD_DATA-OPTIONS',data);
 				break;
 			case 'LOAD_PREVIOUS_SCENE':
@@ -200,6 +200,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 	
 	case 'LOAD_DATA-OPTIONS':
 		if(dataToProcess) {
+			
 			$('#logging_stats_div').empty();
 
 			div = document.createElement('div');
@@ -208,6 +209,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 			table.setAttribute('class', 'table table-bordered');
 			
 			tbody = document.createElement('tbody');
+
 			for(var i = 0; i < dataToProcess.length ; i++) {
 				row = tbody.insertRow(tbody.rows.length);
 				
@@ -218,7 +220,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 						if(dataToProcess[i].split(':')[1] == 'TAG_IMAGE1'){
 							select = document.createElement('input')
 							select.type = 'text';
-							select.id = dataToProcess[i].split(':')[0];
+							select.id = (i - 1) + '_' + dataToProcess[i].split(':')[0];
 							select.value = 'D:/DOAD_In_House_Everest/Everest_Cricket/EVEREST_APL2022/Logos/Delhi.png'
 							label = document.createElement('label');
 							label.type = 'label';
@@ -232,13 +234,12 @@ function addItemsToList(whatToProcess, dataToProcess){
 						else{
 							select = document.createElement('input')
 							select.type = 'text';
-							select.id = dataToProcess[i].split(':')[0];
+							select.id = (i - 1) + '_' + dataToProcess[i].split(':')[0];
 							label = document.createElement('label');
 							label.type = 'label';
 							label.innerHTML = dataToProcess[i].split(':')[0];
 							label.for = select.id;
 							div.appendChild(label).appendChild(select);
-							//row.insertCell(j);
 							row.insertCell(0).appendChild(label).appendChild(select);
 						}
 						alert("label = "+label.innerHTML);
