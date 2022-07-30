@@ -44,7 +44,7 @@ function initialiseForm(whatToProcess, dataToProcess)
 }
 function processUserSelection(whichInput)
 {	
-	alert($(whichInput).attr('id'));
+	//alert($(whichInput).attr('id'));
 	switch ($(whichInput).attr('id')) {
 	case 'finish_btn':
 		if(checkEmpty($('#vizIPAddress'),'IP Address Blank') == false
@@ -85,10 +85,10 @@ function processUserSelection(whichInput)
 		switch ($('#select_sports :selected').val()) {
 			
 			
-		case 'BADMINTON':
+		/*case 'BADMINTON':
 			$('#vizPortNumber').attr('value','1980');
 			//processManualProcedures('BADMINTON-OPTIONS')
-			break;
+			break;*/
 		/*case 'CRICKET':
 			processManualProcedures('CRICKET-OPTIONS')
 			break;*/
@@ -242,7 +242,6 @@ function addItemsToList(whatToProcess, dataToProcess){
 							div.appendChild(label).appendChild(select);
 							row.insertCell(0).appendChild(label).appendChild(select);
 						}
-						alert("label = "+label.innerHTML);
 				}
 			}
 			row = tbody.insertRow(tbody.rows.length);

@@ -3,8 +3,8 @@ package com.manual.util;
 public class ManualUtil {
 	
 	public final static String MANUAL_DIRECTORY = "Manual/";
-	public final static String BADMINTON_SCENE_DIRECTORY = "C:/Sports/Badminton/";
-//	public final static String BADMINTON_SCENE_DIRECTORY = "D:/DOAD_In_House_Everest/Everest_Sports/Everest_GBPL/";
+	//public final static String BADMINTON_SCENE_DIRECTORY = "C:/Sports/Badminton/";
+	public final static String BADMINTON_SCENE_DIRECTORY = "D:/DOAD_In_House_Everest/Everest_Sports/Everest_GBPL/";
 	public final static String CRICKET_SCENE_DIRECTORY = "D:/DOAD_In_House_Everest/Everest_Cricket/EVEREST_APL2022/";
 	public final static String BADMINTON_SPORTS_DIRECTORY = "C:/Sports/Badminton/";
 	public final static String CRICKET_SPORTS_DIRECTORY = "C:/Sports/Cricket/";

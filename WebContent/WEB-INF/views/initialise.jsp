@@ -74,6 +74,7 @@
     </div>
   </div>
 </div>
+<input type="hidden" name="select_sports" id="select_sports" value="${session_selected_sports}"/>
 </form:form>
 </body>
 </html>

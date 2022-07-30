@@ -10,7 +10,6 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
@@ -61,10 +60,10 @@ public class IndexController
 			throws UnknownHostException,JAXBException, IOException,IllegalAccessException,InvocationTargetException
 	{
 		session_selected_sports = select_sports;
-		//session_socket = new Socket(vizIPAddresss, Integer.valueOf(vizPortNumber));
-		//print_writer = new PrintWriter(session_socket.getOutputStream(), true);
+		session_socket = new Socket(vizIPAddresss, Integer.valueOf(vizPortNumber));
+		print_writer = new PrintWriter(session_socket.getOutputStream(), true);
 		switch(session_selected_sports) {
-		case "BADMINTON":
+		case "BADMINTON,":
 			model.addAttribute("session_viz_scenes", new File(ManualUtil.BADMINTON_SCENE_DIRECTORY + 
 					ManualUtil.SCENES_DIRECTORY).listFiles(new FileFilter() {
 				@Override
@@ -82,7 +81,7 @@ public class IndexController
 			    }
 			}));
 			break;
-		case "CRICKET":
+		case "CRICKET,":
 			model.addAttribute("session_viz_scenes", new File(ManualUtil.CRICKET_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY).listFiles(new FileFilter() {
 				@Override
 			    public boolean accept(File pathname) {
@@ -110,30 +109,36 @@ public class IndexController
 					throws IllegalAccessException, InvocationTargetException, IOException, JAXBException
 	{	
 		String file_name = "";
-		if (request.getRequestURI().contains("save_data")) {
-			
-			List<Container> containers = new ArrayList<Container>();
-			
-			for (Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
-				if(entry.getKey().contains("previous_xml_data") || entry.getKey().contains("selectedScene") 
-						|| entry.getKey().contains("scene_path") || entry.getKey().contains("manual_file_timestamp") 
-						|| entry.getKey().contains("select_sport")) {
+			if (request.getRequestURI().contains("save_data")) {
+				
+				List<Container> containers = new ArrayList<Container>();
+				
+				for (Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+					if(entry.getKey().contains("previous_xml_data") || entry.getKey().contains("selectedScene") 
+							|| entry.getKey().contains("scene_path") || entry.getKey().contains("manual_file_timestamp") 
+							|| entry.getKey().contains("select_sport")) {
+					}
+					else if(entry.getKey().contains("file_name")) {
+						file_name = entry.getValue()[0];
+					}
+					else {
+						containers.add(new Container(Integer.valueOf(entry.getKey().split("_")[0]), entry.getKey(), entry.getValue()[0]));
+					}		
 				}
-				else if(entry.getKey().contains("file_name")) {
-					file_name = entry.getValue()[0];
+				switch (session_selected_sports) {
+				case "BADMINTON,":
+					JAXBContext.newInstance(ContainerData.class).createMarshaller().marshal(new ContainerData(containers), 
+							new File(ManualUtil.BADMINTON_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + 
+									ManualUtil.DATA_DIRECTORY + file_name + ManualUtil.XML));
+					break;
+				case "CRICKET,":
+					JAXBContext.newInstance(ContainerData.class).createMarshaller().marshal(new ContainerData(containers), 
+							new File(ManualUtil.CRICKET_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + 
+									ManualUtil.DATA_DIRECTORY + file_name + ManualUtil.XML));
+					break;
 				}
-				else {
-					containers.add(new Container(Integer.valueOf(entry.getKey().split("_")[0]), entry.getKey(), entry.getValue()[0]));
-				}		
 			}
-			
-			JAXBContext.newInstance(ContainerData.class).createMarshaller().marshal(new ContainerData(containers), 
-					new File(ManualUtil.BADMINTON_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + 
-							ManualUtil.DATA_DIRECTORY + file_name + ManualUtil.XML));
-			
-		}
 		return JSONObject.fromObject(null).toString();
-		
 	}
 
 	@RequestMapping(value = {"/processManualProcedures"}, method={RequestMethod.GET,RequestMethod.POST})    
@@ -142,123 +147,203 @@ public class IndexController
 			@RequestParam(value = "valueToProcess", required = false, defaultValue = "") String valueToProcess) 
 					throws IOException, IllegalAccessException, InvocationTargetException, JAXBException, InterruptedException
 	{	
-		
 		switch (whatToProcess.toUpperCase()) {
 		
 		case "LOAD_SCENE": case "LOAD_DATA": case "LOAD_PREVIOUS_SCENE": case "ANIMATE-OUT": case "ANIMATE-IN": case "CLEAR-ALL": case "BADMINTON-OPTIONS":
-			//System.out.println(selected_sports);
-			switch(whatToProcess.toUpperCase()) {
-			case "LOAD_PREVIOUS_SCENE":  
-//				new Scene(ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess.replace(".xml", ".sum")).
-//					scene_load(print_writer,ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess.replace(".xml", ".sum"));
-				break;
-			case "LOAD_SCENE":
-				
-				new Scene(ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess).
-					scene_load(print_writer,ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess);
-				break;
-			}
-			switch (whatToProcess.toUpperCase()) {
-			case "LOAD_PREVIOUS_SCENE":
-				
-//				print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
-//				print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
-				//Collections.sort(valueToProcess);
-				//System.out.println("2 = "  + which_graphic_on_screen);
-
-				session_Data = (ContainerData)JAXBContext.newInstance(ContainerData.class).createUnmarshaller().unmarshal(
-						new File(ManualUtil.BADMINTON_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.DATA_DIRECTORY + valueToProcess));
-				Collections.sort(session_Data.getContainers());
-				for(Container cont : session_Data.getContainers())
-					System.out.println("container = " + cont);
-				
-//				for(int i = 0; i < session_Data.getContainers().size() ; i++) {
-//					//Collections.sort(session_Data.getContainers().get(i).getContainer_id());
-//					print_writer.println("LAYER1*EVEREST*TREEVIEW*Main*FUNCTION*TAG_CONTROL SET " + session_Data.getContainers().get(i).getContainer_key() + " " + session_Data.getContainers().get(i).getContainer_value() + ";");
-//				}
-//				//System.out.println(valueToProcess);
-//				switch(valueToProcess.replace(".xml", "").toUpperCase()) {
-//				case "DD_SCHEDULE":
-//					print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 98.0;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
-//					print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
-//					print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
-//					//TimeUnit.SECONDS.sleep(1);
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
-//					print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
-//					break;
-//				case "FF_ROW_COLUMM":
-//					print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 89.0;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
-//					print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
-//					print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
-//					//TimeUnit.SECONDS.sleep(1);
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
-//					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
-//					print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
-//					break;
-//				}
-//				//print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In START;");
-//				//which_graphic_on_screen = "ANY_SCENE";
-				
-				return JSONObject.fromObject(session_Data).toString();
-				
-			case "LOAD_DATA":
-				
-//				print_writer.println("LAYER1*EVEREST*GLOBAL TEMPLATE_SAVE " + ManualUtil.BADMINTON_SPORTS_DIRECTORY + 
-//						ManualUtil.MANUAL_DIRECTORY + ManualUtil.CONTAINER_FILE + ";");
-//				TimeUnit.SECONDS.sleep(2);
-				/*if(new File(ManualUtil.CRICKET_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + CONTAINER_FILE).exists()) {
-					Files.delete(Paths.get(ManualUtil.CRICKET_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + CONTAINER_FILE));
-					print_writer.println("LAYER1*EVEREST*GLOBAL TEMPLATE_SAVE " + ManualUtil.CRICKET_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + CONTAINER_FILE + ";");
-				}
-				else {
-					print_writer.println("LAYER1*EVEREST*GLOBAL TEMPLATE_SAVE " + ManualUtil.CRICKET_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + CONTAINER_FILE + ";");
-				}*/
-				
-				boolean exitLoop = false; int numberOfAttempts = 5;
-				List<String> allLines = new ArrayList<String>();
-				while (exitLoop == false){
-					if(new File(ManualUtil.BADMINTON_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.CONTAINER_FILE).exists()) {
-						allLines = Files.readAllLines(Paths.get(ManualUtil.BADMINTON_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.CONTAINER_FILE));
-						break;
-					} else {
-						TimeUnit.SECONDS.sleep(1);
-						numberOfAttempts = numberOfAttempts - 1;
-					}
-					if(numberOfAttempts <= 0)
-					{
-						break;
-					}
-				}
-				return JSONArray.fromObject(allLines).toString();
-			}
+			switch (session_selected_sports) {
 			
+			case "BADMINTON,":
+				switch(whatToProcess.toUpperCase()) {
+				case "LOAD_PREVIOUS_SCENE":  
+					new Scene(ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess.replace(".xml", ".sum")).
+						scene_load(print_writer,ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess.replace(".xml", ".sum"));
+					break;
+				case "LOAD_SCENE":
+					
+					new Scene(ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess).
+						scene_load(print_writer,ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess);
+					break;
+				}
+				switch (whatToProcess.toUpperCase()) {
+				case "LOAD_PREVIOUS_SCENE":
+					
+					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+					//Collections.sort(valueToProcess);
+					//System.out.println("2 = "  + which_graphic_on_screen);
+
+					session_Data = (ContainerData)JAXBContext.newInstance(ContainerData.class).createUnmarshaller().unmarshal(
+							new File(ManualUtil.BADMINTON_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.DATA_DIRECTORY + valueToProcess));
+					Collections.sort(session_Data.getContainers());
+					/*for(Container cont : session_Data.getContainers())
+						System.out.println("container = " + cont);*/
+					
+					for(int i = 0; i < session_Data.getContainers().size(); i++) {
+						//System.out.println(session_Data.getContainers().get(i).getContainer_key().replaceFirst((i+1)+"_", ""));
+						//Collections.sort(session_Data.getContainers().get(i).getContainer_id());
+						print_writer.println("LAYER1*EVEREST*TREEVIEW*Main*FUNCTION*TAG_CONTROL SET " + session_Data.getContainers().get(i).getContainer_key().replaceFirst((i+1)+"_", "") + " " + session_Data.getContainers().get(i).getContainer_value() + ";");
+					}
+					//System.out.println(valueToProcess);
+					switch(valueToProcess.replace(".xml", "").toUpperCase()) {
+					case "DD_SCHEDULE":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 98.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						//TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "FF_ROW_COLUMM":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 89.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						//TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					}
+					//print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In START;");
+					//which_graphic_on_screen = "ANY_SCENE";
+					
+					return JSONObject.fromObject(session_Data).toString();
+					
+				case "LOAD_DATA":
+					
+					print_writer.println("LAYER1*EVEREST*GLOBAL TEMPLATE_SAVE " + ManualUtil.BADMINTON_SPORTS_DIRECTORY + 
+							ManualUtil.MANUAL_DIRECTORY + ManualUtil.CONTAINER_FILE + ";");
+					TimeUnit.SECONDS.sleep(2);
+					/*if(new File(ManualUtil.CRICKET_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + CONTAINER_FILE).exists()) {
+						Files.delete(Paths.get(ManualUtil.CRICKET_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + CONTAINER_FILE));
+						print_writer.println("LAYER1*EVEREST*GLOBAL TEMPLATE_SAVE " + ManualUtil.CRICKET_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + CONTAINER_FILE + ";");
+					}
+					else {
+						print_writer.println("LAYER1*EVEREST*GLOBAL TEMPLATE_SAVE " + ManualUtil.CRICKET_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + CONTAINER_FILE + ";");
+					}*/
+					
+					boolean exitLoop = false; int numberOfAttempts = 5;
+					List<String> allLines = new ArrayList<String>();
+					while (exitLoop == false){
+						if(new File(ManualUtil.BADMINTON_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.CONTAINER_FILE).exists()) {
+							allLines = Files.readAllLines(Paths.get(ManualUtil.BADMINTON_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.CONTAINER_FILE));
+							break;
+						} else {
+							TimeUnit.SECONDS.sleep(1);
+							numberOfAttempts = numberOfAttempts - 1;
+						}
+						if(numberOfAttempts <= 0)
+						{
+							break;
+						}
+					}
+					return JSONArray.fromObject(allLines).toString();
+				}
+				break;
+				
+			case "CRICKET,":
+				switch(whatToProcess.toUpperCase()) {
+				case "LOAD_PREVIOUS_SCENE":  
+					new Scene(ManualUtil.CRICKET_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess.replace(".xml", ".sum")).
+						scene_load(print_writer,ManualUtil.CRICKET_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess.replace(".xml", ".sum"));
+					break;
+				case "LOAD_SCENE":
+					
+					new Scene(ManualUtil.CRICKET_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess).
+						scene_load(print_writer,ManualUtil.CRICKET_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess);
+					break;
+				}
+				switch (whatToProcess.toUpperCase()) {
+				case "LOAD_PREVIOUS_SCENE":
+					
+					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+					//Collections.sort(valueToProcess);
+					//System.out.println("2 = "  + which_graphic_on_screen);
+
+					session_Data = (ContainerData)JAXBContext.newInstance(ContainerData.class).createUnmarshaller().unmarshal(
+							new File(ManualUtil.CRICKET_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.DATA_DIRECTORY + valueToProcess));
+					Collections.sort(session_Data.getContainers());
+					/*for(Container cont : session_Data.getContainers())
+						System.out.println("container = " + cont);*/
+					
+					for(int i = 0; i < session_Data.getContainers().size() ; i++) {
+						//Collections.sort(session_Data.getContainers().get(i).getContainer_id());
+						print_writer.println("LAYER1*EVEREST*TREEVIEW*Main*FUNCTION*TAG_CONTROL SET " + session_Data.getContainers().get(i).getContainer_key() + " " + session_Data.getContainers().get(i).getContainer_value() + ";");
+					}
+					//System.out.println(valueToProcess);
+					switch(valueToProcess.replace(".xml", "").toUpperCase()) {
+					case "DD_SCHEDULE":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 98.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						//TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "FF_ROW_COLUMM":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 89.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						//TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					}
+					return JSONObject.fromObject(session_Data).toString();
+					
+				case "LOAD_DATA":
+					
+					print_writer.println("LAYER1*EVEREST*GLOBAL TEMPLATE_SAVE " + ManualUtil.CRICKET_SPORTS_DIRECTORY + 
+							ManualUtil.MANUAL_DIRECTORY + ManualUtil.CONTAINER_FILE + ";");
+					TimeUnit.SECONDS.sleep(2);
+					boolean exitLoop = false; int numberOfAttempts = 5;
+					List<String> allLines = new ArrayList<String>();
+					while (exitLoop == false){
+						if(new File(ManualUtil.CRICKET_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.CONTAINER_FILE).exists()) {
+							allLines = Files.readAllLines(Paths.get(ManualUtil.CRICKET_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.CONTAINER_FILE));
+							break;
+						} else {
+							TimeUnit.SECONDS.sleep(1);
+							numberOfAttempts = numberOfAttempts - 1;
+						}
+						if(numberOfAttempts <= 0)
+						{
+							break;
+						}
+					}
+					return JSONArray.fromObject(allLines).toString();
+				}
+				break;
+			}
 			switch (whatToProcess.toUpperCase()) {
 			
 			case "ANIMATE-OUT":
 				print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In COUNTINUE_REVERSE;");
 				return JSONObject.fromObject(null).toString();
 			case "ANIMATE-IN":
-				
 				print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In START;");
-				/*TimeUnit.SECONDS.sleep(2);
-				print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
-				print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
-				print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
-				print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");*/
 				return JSONObject.fromObject(null).toString();
 			case "CLEAR-ALL":
-				//System.out.println("3 = "  + which_graphic_on_screen);
 				print_writer.println("LAYER1*EVEREST*SINGLE_SCENE CLEAR;");
-				
 				return JSONObject.fromObject(null).toString();
 			}
 		
