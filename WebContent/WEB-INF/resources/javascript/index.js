@@ -194,7 +194,7 @@ function processManualProcedures(whatToProcess)
 }
 function addItemsToList(whatToProcess, dataToProcess){
 
-	var option,i,div;
+	var option,i,label,select,div,col_num_per_row = 0, col_id = 0;
 	
 	switch (whatToProcess) {
 	
@@ -209,40 +209,49 @@ function addItemsToList(whatToProcess, dataToProcess){
 			table.setAttribute('class', 'table table-bordered');
 			
 			tbody = document.createElement('tbody');
-
+			
 			for(var i = 0; i < dataToProcess.length ; i++) {
-				row = tbody.insertRow(tbody.rows.length);
-				
-					if(i == 0) {
-						document.getElementById('scene_path').value = dataToProcess[i];
-					} else if(i == 1) {
-					}else {
-						if(dataToProcess[i].split(':')[1] == 'TAG_IMAGE1'){
-							select = document.createElement('input')
-							select.type = 'text';
-							select.id = (i - 1) + '_' + dataToProcess[i].split(':')[0];
-							select.value = 'D:/DOAD_In_House_Everest/Everest_Cricket/EVEREST_APL2022/Logos/Delhi.png'
-							label = document.createElement('label');
-							label.type = 'label';
-							label.innerHTML = dataToProcess[i].split(':')[0];
-							label.for = select.id;
-							div.appendChild(label).appendChild(select);
-							//row.insertCell(j);
-							row.insertCell(0).appendChild(label).appendChild(select);
-							}
-							
-						else{
-							select = document.createElement('input')
-							select.type = 'text';
-							select.id = (i - 1) + '_' + dataToProcess[i].split(':')[0];
-							label = document.createElement('label');
-							label.type = 'label';
-							label.innerHTML = dataToProcess[i].split(':')[0];
-							label.for = select.id;
-							div.appendChild(label).appendChild(select);
-							row.insertCell(0).appendChild(label).appendChild(select);
+				//alert(col_id);
+				if(i == 0) {
+					document.getElementById('scene_path').value = dataToProcess[i];
+				} else if(i == 1) {
+				}else {
+					if(col_num_per_row % 3 == 0) {
+						row = tbody.insertRow(tbody.rows.length);
+						col_num_per_row = col_num_per_row + 1; // 7
+						col_id = 0; 
+					} else {
+						col_id = col_id + 1; // 2
+						col_num_per_row = col_num_per_row + 1; // 6
+					}
+					if(dataToProcess[i].split(':')[1] == 'TAG_IMAGE1'){
+						select = document.createElement('input')
+						select.type = 'text';
+						select.id = (i - 1) + '_' + dataToProcess[i].split(':')[0];
+						select.value = 'D:/DOAD_In_House_Everest/Everest_Cricket/EVEREST_APL2022/Logos/Delhi.png'
+						label = document.createElement('label');
+						label.type = 'label';
+						label.innerHTML = dataToProcess[i].split(':')[0];
+						label.for = select.id;
+						div.appendChild(label).appendChild(select);
+						//row.insertCell(j);
+						//row.insertCell(col_id).appendChild(label).appendChild(select);
 						}
+						
+					else{
+						select = document.createElement('input')
+						select.type = 'text';
+						select.id = (i - 1) + '_' + dataToProcess[i].split(':')[0];
+						label = document.createElement('label');
+						label.type = 'label';
+						label.innerHTML = dataToProcess[i].split(':')[0];
+						label.for = select.id;
+						div.appendChild(label).appendChild(select);
+						//row.insertCell(col_id).appendChild(label).appendChild(select);
+					}
+					row.insertCell(col_id).appendChild(label).appendChild(select);
 				}
+				
 			}
 			row = tbody.insertRow(tbody.rows.length);
 			
@@ -284,7 +293,14 @@ function addItemsToList(whatToProcess, dataToProcess){
 			tbody = document.createElement('tbody');
 			
 			dataToProcess.containers.forEach(function(cont,index,array){
-				row = tbody.insertRow(tbody.rows.length);
+				if(col_num_per_row % 3 == 0) {
+						row = tbody.insertRow(tbody.rows.length);
+						col_num_per_row = col_num_per_row + 1; // 7
+						col_id = 0; 
+					} else {
+						col_id = col_id + 1; // 2
+						col_num_per_row = col_num_per_row + 1; // 6
+					}
 				
 				select = document.createElement('input');
 				select.type = 'text';
@@ -296,7 +312,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 				label.type = 'label';
 				label.innerHTML = cont.container_key;
 				label.for = select.id;
-				row.insertCell(0).appendChild(label).appendChild(select);
+				row.insertCell(col_id).appendChild(label).appendChild(select);
 			});
 			row = tbody.insertRow(tbody.rows.length);
 			
