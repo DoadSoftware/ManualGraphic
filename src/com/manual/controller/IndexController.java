@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.manual.model.Configurations;
 import com.manual.model.Container;
 import com.manual.model.ContainerData;
 import com.manual.model.Scene;
@@ -42,13 +43,24 @@ public class IndexController
 	@Autowired
 	ManualService manualService;
 	public static Socket session_socket;
+	public static Configurations session_Configurations;
 	public static PrintWriter print_writer;
 	public static ContainerData session_Data;
 	String session_selected_sports;
 	
 	@RequestMapping(value = {"/","/initialise"}, method={RequestMethod.GET,RequestMethod.POST}) 
-	public String initialisePage(ModelMap model)  
+	public String initialisePage(ModelMap model) throws JAXBException  
 	{
+		if(new File(ManualUtil.CONFIGURATION_DIRECTORY + ManualUtil.OUTPUT_XML).exists()) {
+			session_Configurations = (Configurations)JAXBContext.newInstance(Configurations.class).createUnmarshaller().unmarshal(
+					new File(ManualUtil.CONFIGURATION_DIRECTORY  + ManualUtil.OUTPUT_XML));
+		} else {
+			session_Configurations = new Configurations();
+			JAXBContext.newInstance(Configurations.class).createMarshaller().marshal(session_Configurations, 
+					new File(ManualUtil.CONFIGURATION_DIRECTORY + ManualUtil.OUTPUT_XML));
+		}
+		model.addAttribute("session_Configurations",session_Configurations);
+		
 		return "initialise";
 	}
 
@@ -62,6 +74,9 @@ public class IndexController
 		session_selected_sports = select_sports;
 		session_socket = new Socket(vizIPAddresss, Integer.valueOf(vizPortNumber));
 		print_writer = new PrintWriter(session_socket.getOutputStream(), true);
+		session_Configurations = new Configurations(vizIPAddresss, vizPortNumber);
+		JAXBContext.newInstance(Configurations.class).createMarshaller().marshal(session_Configurations, 
+				new File(ManualUtil.CONFIGURATION_DIRECTORY + ManualUtil.OUTPUT_XML));
 		switch(session_selected_sports) {
 		case "BADMINTON,":
 			model.addAttribute("session_viz_scenes", new File(ManualUtil.BADMINTON_SCENE_DIRECTORY + 
@@ -277,7 +292,7 @@ public class IndexController
 					
 					for(int i = 0; i < session_Data.getContainers().size() ; i++) {
 						//Collections.sort(session_Data.getContainers().get(i).getContainer_id());
-						print_writer.println("LAYER1*EVEREST*TREEVIEW*Main*FUNCTION*TAG_CONTROL SET " + session_Data.getContainers().get(i).getContainer_key() + " " + session_Data.getContainers().get(i).getContainer_value() + ";");
+						print_writer.println("LAYER1*EVEREST*TREEVIEW*Main*FUNCTION*TAG_CONTROL SET " + session_Data.getContainers().get(i).getContainer_key().replaceFirst((i+1)+"_", "") + " " + session_Data.getContainers().get(i).getContainer_value() + ";");
 					}
 					//System.out.println(valueToProcess);
 					switch(valueToProcess.replace(".xml", "").toUpperCase()) {

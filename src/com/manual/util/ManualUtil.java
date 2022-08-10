@@ -4,10 +4,12 @@ public class ManualUtil {
 	
 	public final static String MANUAL_DIRECTORY = "Manual/";
 	//public final static String BADMINTON_SCENE_DIRECTORY = "C:/Sports/Badminton/";
-	public final static String BADMINTON_SCENE_DIRECTORY = "D:/DOAD_In_House_Everest/Everest_Sports/Everest_GBPL/";
-	public final static String CRICKET_SCENE_DIRECTORY = "D:/DOAD_In_House_Everest/Everest_Cricket/EVEREST_APL2022/";
+	public final static String BADMINTON_SCENE_DIRECTORY = "C:/DOAD_In_House_Everest/Everest_Sports/Everest_GBPL/";
+	public final static String CRICKET_SCENE_DIRECTORY = "C:/DOAD_In_House_Everest/Everest_Cricket/EVEREST_APL2022/";
 	public final static String BADMINTON_SPORTS_DIRECTORY = "C:/Sports/Badminton/";
 	public final static String CRICKET_SPORTS_DIRECTORY = "C:/Sports/Cricket/";
+	public final static String CONFIGURATION_DIRECTORY = "C:/Sports/Configuration/";
+	public final static String OUTPUT_XML = "Output.xml";
 	public final static String DATA_DIRECTORY = "Data/";
 	public final static String MATCHES_DIRECTORY = "Matches/";
 	public final static String SCENES_DIRECTORY = "Scenes/";

@@ -32,7 +32,7 @@
 			    <label for="vizIPAddress" class="col-sm-4 col-form-label text-left">Viz IP Address 
 			    	<i class="fas fa-asterisk fa-sm text-danger" style="font-size: 7px;"></i></label>
 			    <div class="col-sm-6 col-md-6">
-		             <input type="text" id="vizIPAddress" name="vizIPAddress" 
+		             <input type="text" id="vizIPAddress" name="vizIPAddress" value="${session_Configurations.ipAddress}"
 		             		class="form-control form-control-sm floatlabel" value="localhost"></input>
 		              <label id="vizIPAddress-validation" style="color:red; display: none;"></label> 
 			    </div>
