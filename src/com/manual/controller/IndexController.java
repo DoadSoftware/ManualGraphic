@@ -47,7 +47,8 @@ public class IndexController
 	public static PrintWriter print_writer;
 	public static ContainerData session_Data;
 	String session_selected_sports;
-	
+	String Data;
+	String Scene;
 	@RequestMapping(value = {"/","/initialise"}, method={RequestMethod.GET,RequestMethod.POST}) 
 	public String initialisePage(ModelMap model) throws JAXBException  
 	{
@@ -169,12 +170,16 @@ public class IndexController
 			
 			case "BADMINTON,":
 				switch(whatToProcess.toUpperCase()) {
-				case "LOAD_PREVIOUS_SCENE":  
-					new Scene(ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess.replace(".xml", ".sum")).
-						scene_load(print_writer,ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess.replace(".xml", ".sum"));
+				case "LOAD_PREVIOUS_SCENE":
+					//Data = valueToProcess.split("_")[1];
+					//System.out.println("Scene =" + Scene);
+					/*new Scene(ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + Scene).
+					scene_load(print_writer,ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + Scene);*/
+					new Scene(ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + Scene).
+						scene_load(print_writer,ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + Scene);
 					break;
 				case "LOAD_SCENE":
-					
+					Scene = valueToProcess;
 					new Scene(ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess).
 						scene_load(print_writer,ManualUtil.BADMINTON_SCENE_DIRECTORY + ManualUtil.SCENES_DIRECTORY + valueToProcess);
 					break;
@@ -186,7 +191,7 @@ public class IndexController
 					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
 					//Collections.sort(valueToProcess);
 					//System.out.println("2 = "  + which_graphic_on_screen);
-
+					
 					session_Data = (ContainerData)JAXBContext.newInstance(ContainerData.class).createUnmarshaller().unmarshal(
 							new File(ManualUtil.BADMINTON_SPORTS_DIRECTORY + ManualUtil.MANUAL_DIRECTORY + ManualUtil.DATA_DIRECTORY + valueToProcess));
 					Collections.sort(session_Data.getContainers());
@@ -200,6 +205,7 @@ public class IndexController
 					}
 					//System.out.println(valueToProcess);
 					switch(valueToProcess.replace(".xml", "").toUpperCase()) {
+					//switch(Scene.toUpperCase()) {
 					case "DD_SCHEDULE":
 						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
 						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
@@ -221,7 +227,215 @@ public class IndexController
 						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
 						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
 						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
-						//TimeUnit.SECONDS.sleep(1);
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "LT_MATCHID_SCORE_SINGLE":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 106.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "LT_MATCHID_SCORE_DOUBLE":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 75.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");	
+						break;
+					case "MATCHID_SINGLES":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 123.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");	
+						break;
+					case "MATCHID_DOUBLE":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 82.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");	
+						break;
+					case "LT_TIEID":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 75.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");	
+						break;
+					case "TIEID":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 98.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");	
+						break;
+					case "LT_SIDES":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 149.00;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");	
+						break;
+					case "ORDER_OF_PLAY":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 109.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");	
+						break;
+					case "TEAMS":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 98.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "PLAYER_PROFILE":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 127.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");	
+						break;
+					case "SQUAD":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 83.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "POINTS_TABLE":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 115.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "FF_RULES":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 84.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "LT_SUPER":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 79.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "FF_SUPERMATCH":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 110.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");
+						break;
+					case "FASTRACK":
+						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 83.0;");
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT_PATH C:/Temp/Preview.bmp;");
+						print_writer.println("LAYER1*EVEREST*GLOBAL SNAPSHOT 1920 1080;");
+						TimeUnit.SECONDS.sleep(1);
 						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
 						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
 						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");

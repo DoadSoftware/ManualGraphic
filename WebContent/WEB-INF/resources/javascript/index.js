@@ -61,7 +61,7 @@ function processUserSelection(whichInput)
 		processManualProcedures('LOAD_DATA');
 		break;
 	case 'save_button':
-		alert("File Saved \r\nFile Location = C:/Sports/Cricket/Manual/Data");
+		alert("File Saved \r\nFile Location = C:/Sports/Badminton/Manual/Data");
 		$('#logging_stats_div').hide();
 		uploadFormDataToSessionObjects('SAVE_DATA');
 		
@@ -228,7 +228,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 						select = document.createElement('input')
 						select.type = 'text';
 						select.id = (i - 1) + '_' + dataToProcess[i].split(':')[0];
-						select.value = 'D:/DOAD_In_House_Everest/Everest_Cricket/EVEREST_APL2022/Logos/Delhi.png'
+						select.value = 'C:/Images/LEFT/'
 						label = document.createElement('label');
 						label.type = 'label';
 						label.innerHTML = dataToProcess[i].split(':')[0];
@@ -319,11 +319,12 @@ function addItemsToList(whatToProcess, dataToProcess){
 			select = document.createElement('input')
 			select.type = 'text';
 			select.id = 'file_name';
-			select.value = (document.getElementById('scene_path').value).split('/')[
-				(document.getElementById('scene_path').value).split('/').length - 1].replace('.sum','');
+			//alert(document.getElementById('scene_path').value);
+			select.value = '';
+			//select.value = ($('#previous_xml_data option:selected').val()).replace('.xml','');
 			label = document.createElement('label');
 			label.type = 'label';
-			label.innerHTML = 'Save XML File As';
+			label.innerHTML = 'Save XML Files As';
 			label.for = select.id;
 			row.insertCell(0).appendChild(label).appendChild(select);
 			
