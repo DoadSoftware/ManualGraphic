@@ -187,8 +187,8 @@ public class IndexController
 				switch (whatToProcess.toUpperCase()) {
 				case "LOAD_PREVIOUS_SCENE":
 					
-					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
-					print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
+					//print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out SHOW 0.0;");
+					//print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In SHOW 0.0;");
 					//Collections.sort(valueToProcess);
 					//System.out.println("2 = "  + which_graphic_on_screen);
 					
@@ -201,11 +201,18 @@ public class IndexController
 					for(int i = 0; i < session_Data.getContainers().size(); i++) {
 						//System.out.println(session_Data.getContainers().get(i).getContainer_key().replaceFirst((i+1)+"_", ""));
 						//Collections.sort(session_Data.getContainers().get(i).getContainer_id());
-						print_writer.println("LAYER1*EVEREST*TREEVIEW*Main*FUNCTION*TAG_CONTROL SET " + session_Data.getContainers().get(i).getContainer_key().replaceFirst((i+1)+"_", "") + " " + session_Data.getContainers().get(i).getContainer_value() + ";");
+						//System.out.println(session_Data.getContainers().get(i).getContainer_value());
+						print_writer.println("LAYER1*EVEREST*TREEVIEW*Main*FUNCTION*TAG_CONTROL SET " + session_Data.getContainers().get(i).getContainer_key().replaceFirst((i+1)
+								+"_", "") + " " + session_Data.getContainers().get(i).getContainer_value() + ";");
+						
 					}
+					/*System.out.println(Scene);
+					if(Scene == "Order_Of_Play.sum") {
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*TrumpLoop START;");
+					}*/
 					//System.out.println(valueToProcess);
-					switch(valueToProcess.replace(".xml", "").toUpperCase()) {
-					//switch(Scene.toUpperCase()) {
+					//switch(valueToProcess.replace(".xml", "").toUpperCase()) {
+					switch(Scene.replace(".sum", "").toUpperCase()) {
 					case "DD_SCHEDULE":
 						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
 						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
@@ -324,6 +331,8 @@ public class IndexController
 						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW OFF;");	
 						break;
 					case "ORDER_OF_PLAY":
+						
+						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*TrumpLoop START;");
 						print_writer.println("LAYER1*EVEREST*GLOBAL PREVIEW ON;");
 						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*In STOP;");
 						print_writer.println("LAYER1*EVEREST*STAGE*DIRECTOR*Out STOP;");
